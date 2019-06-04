@@ -1,0 +1,268 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>H5新特性---Canvas绘图</title>
+
+
+ <script type="text/javascript">
+ 
+       window.onload=function(){
+
+           var  canvas = document.getElementsByTagName('canvas')[0];
+
+           var thr = canvas.getContext('2d');
+
+
+           //声明圆的半径
+            var oR =  150;
+           //声明圆的圆心坐标
+            var oX = 300;
+            var oY = 300;
+
+          //声明表盘刻度的长度
+            var oL = 8;
+
+
+
+          //封装画表盘函数
+
+          function drawWatch(){
+
+               //初始化设定样式
+
+              var color = thr.createRadialGradient(300, 300, 0, 300, 300, 150);
+
+              color.addColorStop(0, '#fb737a');
+              color.addColorStop(1, '#333');
+              thr.fillStyle = color;
+
+
+
+              //画表盘
+
+              thr.beginPath();
+
+              thr.arc(oX, oY, oR, 0, 2 * Math.PI, false);
+
+              thr.fill();
+
+              thr.closePath();
+
+              //画刻度
+
+              var deg = 0;
+
+
+              for (var i = 0; i < 60; i++) {
+
+                  deg = i * 6;
+
+                  if (i % 5 == 0) {
+
+                      oL = 12;
+                      thr.strokeStyle = "#f00";
+                      thr.lineWidth = 5;
+
+                  } else {
+
+                      oL = 8;
+                      thr.strokeStyle = "#fff";
+                      thr.lineWidth = 2;
+
+                  }
+
+
+
+
+                  thr.beginPath();
+
+                  thr.moveTo(300 + oR * Math.cos(deg / 180 * Math.PI), 300 + oR * Math.sin(deg / 180 * Math.PI));
+                  thr.lineTo(300 + (oR - oL) * Math.cos(deg / 180 * Math.PI), 300 + (oR - oL) * Math.sin(deg / 180 * Math.PI));
+
+                  thr.stroke();
+
+                  thr.closePath();
+
+
+              }
+
+
+          }
+
+            //初始化时，画表盘
+            drawWatch();
+
+            
+            //画表针
+
+            // var mL = 120;             //表针长度
+            // var mdeg = 6;             //表针的角度
+            // var mColor = '#f00';      //表针的颜色
+            // var mlineWidth = 2;       //表针的宽度
+
+
+            //封装画表针的函数
+
+            function drawScale(mL,mdeg,mColor,mlineWidth){
+
+                 thr.beginPath();
+
+
+                thr.strokeStyle = mColor;
+
+                thr.lineWidth = mlineWidth;
+
+                thr.moveTo(300, 300);
+
+                thr.lineTo(300 + mL * Math.cos(mdeg / 180 * Math.PI), 300 + mL * Math.sin(mdeg / 180 * Math.PI));
+
+                thr.stroke();
+
+                thr.closePath();
+
+            }
+
+
+
+          //初始化时，画表针
+
+          
+           var date = new Date();
+           var sdeg = date.getSeconds() * 6 - 90;
+           var mdeg = date.getMinutes() * 6 - 90;
+           var hdeg = date.getHours() * 30 - 90 + (date.getMinutes() * 6 / 12);
+
+           //画时针
+
+           drawScale(80, hdeg, '#dc31eb', 6);
+
+
+           //画分针
+
+           drawScale(100, mdeg, '#f00', 4);
+
+
+           //画秒针
+
+           drawScale(120, sdeg, '#fff', 2);
+
+
+
+
+
+
+         //表针动画
+
+    
+         setInterval(function(){
+
+
+              thr.clearRect(0,0,600,600);
+
+
+              //清除后，再次画表盘
+              drawWatch();
+
+            
+
+
+             var date = new Date();
+             var sdeg = date.getSeconds() * 6 - 90;
+             var mdeg = date.getMinutes() * 6 - 90;
+             var hdeg = date.getHours() * 30 - 90 + (date.getMinutes()*6/12);
+
+             //画时针
+
+             drawScale(80, hdeg, '#dc31eb', 6);
+
+
+             //画分针
+
+             drawScale(100, mdeg, '#f00', 4);
+
+
+             //画秒针
+
+             drawScale(120, sdeg, '#fff', 2);
+
+
+            //清除后，再次画表芯
+             drawHeart();
+
+
+
+         },1000);
+
+        
+
+       //画表芯
+
+      function drawHeart(){
+        
+         thr.beginPath();
+
+          thr.fillStyle = "#fff";
+
+          thr.arc(300, 300, 10, 0, 2 * Math.PI, false);
+
+          thr.fill();
+          thr.closePath();
+
+
+
+          thr.beginPath();
+
+          thr.fillStyle = "#f00";
+
+          thr.arc(300, 300, 5, 0, 2 * Math.PI, false);
+
+          thr.fill();
+          thr.closePath();
+
+
+      }
+
+        //初始化时画表芯
+        drawHeart();
+
+
+
+
+
+
+
+
+
+       }
+ 
+ 
+ 
+ </script>
+
+ <style>
+     body{
+          text-align:center;
+     }
+     canvas{
+          background:#ddd;
+     }
+
+ </style>
+
+
+
+</head>
+<body>
+       
+          <canvas width="600" height="600" >Canvas绘图</canvas>
+
+
+  
+            
+          
+
+</body>
+</html>
